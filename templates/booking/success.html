@@ -1,0 +1,10 @@
+{% extends 'booking/base.html' %}
+{% block content %}
+<div class="card mx-auto text-center shadow" style="max-width:520px"><div class="card-body p-5">
+<div class="display-4 text-success"><i class="bi bi-check-circle-fill"></i></div>
+<h3 class="fw-bold mt-2">تم استلام طلبك يا {{ ap.name }}</h3>
+<p class="text-muted">تخصص {{ ap.specialty.name }} — يوم {{ ap.date }}<br>رقم الحجز #{{ ap.pk }} — الحالة: {{ ap.get_status_display }}</p>
+<p class="small">هنتصل بيك على {{ ap.phone }} للتأكيد.</p>
+<a class="btn btn-dark" href="/">حجز جديد</a>
+</div></div>
+{% endblock %}

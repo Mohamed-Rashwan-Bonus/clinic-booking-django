@@ -1,0 +1,31 @@
+{% extends 'booking/base.html' %}
+{% block content %}
+<div class="row g-4 align-items-center">
+<div class="col-lg-6">
+<div class="p-4 p-md-5 rounded text-white" style="background:linear-gradient(135deg,#0f172a,#1e40af)">
+<h1 class="fw-bold">احجز كشفك في دقيقة</h1>
+<p>اختار التخصص واليوم وسيب الباقي علينا — تأكيد سريع على موبايلك.</p>
+<div class="d-flex gap-3 mt-3">
+<div><h4 class="mb-0">{{ stats.total }}</h4><small>حجز تم</small></div>
+<div><h4 class="mb-0"><i class="bi bi-shield-check"></i></h4><small>تحقق من الرقم المصري</small></div>
+<div><h4 class="mb-0"><i class="bi bi-lightning"></i></h4><small>تأكيد سريع</small></div>
+</div></div>
+<ul class="list-group mt-3 small">
+<li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> منع الحجز المكرر لنفس الرقم في نفس اليوم</li>
+<li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> إدارة المواعيد من Django Admin (تأكيد/إلغاء/بحث)</li>
+<li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> تصميم متجاوب للموبايل</li>
+</ul>
+</div>
+<div class="col-lg-6">
+<div class="card shadow"><div class="card-body">
+<h5 class="fw-bold mb-3"><i class="bi bi-calendar-plus"></i> فورم الحجز</h5>
+<form method="post" novalidate>{% csrf_token %}
+{% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+{% for f in form %}
+<div class="mb-3"><label class="form-label">{{ f.label }}</label>{{ f }}{% if f.errors %}<div class="text-danger small">{{ f.errors }}</div>{% endif %}</div>
+{% endfor %}
+<button class="btn btn-primary w-100">تأكيد الحجز</button>
+</form>
+</div></div>
+</div></div>
+{% endblock %}
