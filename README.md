@@ -1,54 +1,37 @@
-# Clinic Booking — نظام حجوزات عيادة Django MVT (Portfolio Project 3)
+# Clinic Booking — نظام حجوزات عيادة Django MVT (Solo Build)
 
-Solo build — Django + Bootstrap 5. أسهل مشروع يبيع على مستقل وخمسات (كل عيادة/مركز عايزه).
+![Django](https://img.shields.io/badge/Django-5.x-green) ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple) ![EG-Phone](https://img.shields.io/badge/EG--phone-validated-orange)
 
-## الفكرة
-صفحة هبوط + فورم حجز (اسم + رقم مصري + تخصص + معاد) + لوحة Admin للمواعيد + تحقق من الرقم المصري (عندك الكود جاهز من E-Shop).
+صفحة هبوط + فورم حجز ذكي + إدارة مواعيد — **Django MVT + Bootstrap 5 + SQLite**. نفس كود تحقق الرقم المصري المستخدم في مشروع E-Shop.
 
-## هتبنيه في يوم واحد — Checklist
-- [ ] نفس setup مشروع المدونة
-- [ ] Models:
-```python
-# booking/models.py
-from django.db import models
-import re
+## Demo
+- Home: `http://127.0.0.1:8001/` (استخدم بورت مختلف عن المدونة لو مشغل الاتنين)
+- Admin: `/admin/` — إدارة تخصصات ومواعيد (تأكيد/إلغاء/بحث/فلترة)
+- Success: `/done/<id>/` بعد الحجز
 
-class Specialty(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    def __str__(self): return self.name
+## Features
+- تحقق تلقائي من الرقم المصري (`010/011/012/015` + `+20`) مع رسالة عربية واضحة
+- منع التاريخ الماضي + منع الحجز المكرر (نفس الرقم/اليوم)
+- `Specialty` + `Appointment(status: pending/confirmed/cancelled)` + Admin actions
+- صفحة نجاح برقم الحجز + تصميم RTL متجاوب
 
-class Appointment(models.Model):
-    STATUS = [('pending','قيد المراجعة'),('confirmed','مؤكد'),('cancelled','ملغي')]
-    name = models.CharField(max_length=120)
-    phone = models.CharField(max_length=15)  # +20 validation
-    specialty = models.ForeignKey(Specialty, on_delete=models.PROTECT)
-    date = models.DateField()
-    notes = models.TextField(blank=True)
-    status = models.CharField(max_length=20, choices=STATUS, default='pending')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def clean(self):
-        from django.core.exceptions import ValidationError
-        # انسخ نفس regex تحقق الرقم المصري من مشروع E-Shop (accounts/validators)
-        if not re.match(r'^(\+20|0)?1[0125][0-9]{8}$', self.phone):
-            raise ValidationError('رقم مصري غير صحيح')
-```
-- [ ] Form بـ `ModelForm` + رسالة نجاح بعد الحجز + منع حجز مكرر لنفس الرقم/اليوم
-- [ ] Admin: list_display (name, phone, specialty, date, status) + filter + search + action "تأكيد"
-- [ ] Templates: Hero + مميزات + فورم حجز + صفحة "تم استلام طلبك" (انسخ ستايل E-Shop)
-- [ ] سكرينين: الهبوط + جدول المواعيد في Admin
-
-## Run
+## Run (Windows)
 ```powershell
+py -m venv venv
+.\venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
+python manage.py shell --command="exec(open('seed_demo.py',encoding='utf-8').read())"
+python manage.py runserver 8001
 ```
 
-## للرفع على GitHub
-repo جديد `clinic-booking-django` وادفع الكود + سكرينات.
+## Models
+```python
+Specialty(name)
+Appointment(name, phone[EG-validated], specialty[PROTECT], date[>=today], notes, status, created_at)
+```
 
-## وصف جاهز لمستقل (انسخه)
-> **نظام حجوزات عيادة - Django + Bootstrap**
-> صفحة هبوط متجاوبة مع فورم حجز ذكي: تحقق تلقائي من الرقم المصري (+20)، منع التكرار، حفظ الموعد، وإدارة كاملة من Django Admin (تأكيد/إلغاء/بحث/فلترة بالتخصص). بناء فردي بالكامل.
+## Author
+Solo build by **Mohamed Rashwan** — portfolio:
+- E-Shop: https://github.com/Mohamed-Rashwan-Bonus/eshop-django
+- Blog: https://github.com/Mohamed-Rashwan-Bonus/blog-dashboard-django
